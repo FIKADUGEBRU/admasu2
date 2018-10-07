@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="7070" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration" host="iib.icraftsoft.net" port="6060" doc:name="HTTP Request Configuration"/>
+    <flow name="getcandidatesFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/candidate" doc:name="HTTP" allowedMethods="GET"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/users" method="GET" doc:name="HTTP"/>
+    </flow>
+    <flow name="getbyIDcandidateeFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/candidate" allowedMethods="get" doc:name="HTTP"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/users/{id}" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:uri-param paramName="id" value="#[message.inboundProperties.'http.query.params']"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+    <flow name="postcandidateFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/candidate" allowedMethods="post" doc:name="HTTP"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/users" method="POST" doc:name="HTTP"/>
+    </flow>
+    <flow name="putcandidatesFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/candidate" allowedMethods="put" doc:name="HTTP"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/users" method="PUT" doc:name="HTTP"/>
+    </flow>
+    <flow name="deletecandidatesFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/candidate" allowedMethods="delete" doc:name="HTTP"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/users/{id}" method="DELETE" doc:name="HTTP"/>
+    </flow>
+</mule>
